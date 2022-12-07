@@ -60,8 +60,8 @@ router.post('/signup', (req, res, next) => {
     .catch((err) => next(err));
 });
 
-// SIGNIN
-router.post('/signin', (req, res, next) => {
+// LOGIN
+router.post('/login', (req, res, next) => {
   const { email, password } = req.body;
   // Check if no email or password
   if (email === '' || password === '') {

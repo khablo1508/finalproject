@@ -4,7 +4,7 @@ require('dotenv').config();
 
 const MONGO_URI = process.env.MONGODB_URI;
 
-const books = [
+const procedures = [
   {
     title: 'Lip augmentation',
     code: 'aug',
@@ -70,7 +70,7 @@ mongoose
     return Procedure.deleteMany();
   })
   .then(() => {
-    return Procedure.create(books);
+    return Procedure.create(procedures);
   })
   .then((proceduresFromDB) => {
     console.log(`Created ${proceduresFromDB.length} procedures`);

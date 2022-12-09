@@ -23,7 +23,18 @@ router.put('/update-profile/:profileId', (req, res, next) => {
     }
   });
 
-  if (newPassword === '') {
+  if (newPassword === '' && newUsername === '') {
+    User.findByIdAndUpdate(
+      profileId,
+      {
+        username,
+        password,
+      },
+      { new: true }
+    )
+      .then((updatedUser) => res.json(updatedUser))
+      .catch((error) => res.json(error));
+  } else if (newPassword === '' && newUsername !== '') {
     User.findByIdAndUpdate(
       profileId,
       {
@@ -33,10 +44,22 @@ router.put('/update-profile/:profileId', (req, res, next) => {
     )
       .then((updatedUser) => res.json(updatedUser))
       .catch((error) => res.json(error));
-  } else {
+  } else if (newPassword !== '' && newUsername === '') {
     const salt = bcrypt.genSaltSync();
     const hashedNewPassword = bcrypt.hashSync(newPassword, salt);
 
+    User.findByIdAndUpdate(
+      profileId,
+      {
+        password: hashedNewPassword,
+      },
+      { new: true }
+    )
+      .then((updatedUser) => res.json(updatedUser))
+      .catch((error) => res.json(error));
+  } else if (newPassword !== '' && newUsername !== '') {
+    const salt = bcrypt.genSaltSync();
+    const hashedNewPassword = bcrypt.hashSync(newPassword, salt);
     User.findByIdAndUpdate(
       profileId,
       {

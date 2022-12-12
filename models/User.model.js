@@ -19,10 +19,10 @@ const userSchema = new Schema(
       type: String,
       required: [true, 'Password is required.'],
     },
-    chosenProcedure: [
+    appointments: [
       {
         type: Schema.Types.ObjectId,
-        ref: 'Procedure',
+        ref: 'Appointment',
       },
     ],
   },

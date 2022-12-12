@@ -4,6 +4,23 @@ const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const User = require('../models/User.model');
 
+router.get('/user-profile/:profileId', (req, res, next) => {
+  const { profileId } = req.params;
+
+  User.findById(profileId)
+    .populate({
+      path: 'appointments',
+      populate: {
+        path: 'procedure',
+        model: 'Procedure',
+      },
+    })
+    .then((foundUser) => {
+      res.json(foundUser);
+    })
+    .catch((err) => next(err));
+});
+
 router.put('/update-profile/:profileId', (req, res, next) => {
   const { profileId } = req.params;
 

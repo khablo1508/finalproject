@@ -10,6 +10,7 @@ const appointmentSchema = new Schema({
     ref: 'User',
   },
   date: String,
+  time: String,
   status: String,
 });
 

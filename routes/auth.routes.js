@@ -94,7 +94,7 @@ router.post('/login', (req, res, next) => {
           expiresIn: '6h',
         });
         // Send the token as the response
-        res.status(200).json({ authToken: authToken });
+        res.status(200).json({ authToken: authToken, user: payload });
       } else {
         res.status(401).json({ message: 'Wrong password!' });
       }

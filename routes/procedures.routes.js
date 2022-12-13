@@ -3,6 +3,7 @@ const router = express.Router();
 const Procedure = require('../models/Procedure.model');
 const User = require('../models/User.model');
 const Appointment = require('../models/Appointment.model');
+const Request = require('../models/Request.model');
 
 // SERVICES ROUTES
 router.get('/services', (req, res, next) => {
@@ -38,13 +39,16 @@ router.get('/create-appointment/:appId', (req, res, next) => {
     .catch((err) => next(err));
 });
 
-router.post('/create-appointment/:appId', (req, res, next) => {
-  const { appDate, userId } = req.body;
+router.put('/create-appointment/:appId', (req, res, next) => {
+  const { appDate, userId, appTime } = req.body;
   const { appId } = req.params;
 
-  Appointment.findByIdAndUpdate(appId, { date: appDate }, { new: true })
+  Appointment.findByIdAndUpdate(
+    appId,
+    { date: appDate, time: appTime },
+    { new: true }
+  )
     .then((updatedApp) => {
-      console.log('added date', updatedApp);
       return User.findByIdAndUpdate(
         userId,
         { $push: { appointments: updatedApp._id } },
@@ -55,6 +59,54 @@ router.post('/create-appointment/:appId', (req, res, next) => {
       console.log('user updated', updatedUser);
       res.json(updatedUser);
     });
+});
+
+router.post('/create-appointment/:appId', (req, res, next) => {
+  const { appId } = req.params;
+
+  Appointment.findById(appId)
+    .then((foundAppointment) => {
+      return Request.create({
+        decision: 'pending',
+        appointment: foundAppointment._id,
+      });
+    })
+    .then((createdReq) => {
+      res.json(createdReq);
+    });
+});
+
+// REQUESTS ROUTES
+router.put('/admin-profile', (req, res, next) => {
+  const { appStatus, appId, decision, reqId } = req.body;
+  let promReqUpdate;
+  let promAppUpdate;
+  if (decision === 'approved') {
+    promReqUpdate = Request.findByIdAndUpdate(
+      reqId,
+      { decision: 'approved' },
+      { new: true }
+    );
+    promAppUpdate = Appointment.findByIdAndUpdate(
+      appId,
+      { status: 'approved' },
+      { new: true }
+    );
+  } else {
+    promReqUpdate = Request.findByIdAndUpdate(
+      reqId,
+      { decision: 'declined' },
+      { new: true }
+    );
+    promAppUpdate = Appointment.findByIdAndUpdate(
+      appId,
+      { status: 'declined' },
+      { new: true }
+    );
+  }
+  Promise.all([promReqUpdate, promAppUpdate]).then((values) => {
+    res.json(values);
+  });
 });
 
 module.exports = router;

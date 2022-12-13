@@ -3,6 +3,29 @@ const router = express.Router();
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
 const User = require('../models/User.model');
+const Appointment = require('../models/Appointment.model');
+const Request = require('../models/Request.model');
+
+router.get('/admin-profile', (req, res, next) => {
+  Request.find()
+    .populate({
+      path: 'appointment',
+      populate: {
+        path: 'procedure',
+        model: 'Procedure',
+      },
+    })
+    .populate({
+      path: 'appointment',
+      populate: {
+        path: 'user',
+        model: 'User',
+      },
+    })
+    .then((requestsFromDb) => {
+      res.json(requestsFromDb);
+    });
+});
 
 router.get('/user-profile/:profileId', (req, res, next) => {
   const { profileId } = req.params;

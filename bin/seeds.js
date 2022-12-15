@@ -33,7 +33,7 @@ const procedures = [
     title: 'Microdermabrasion',
     code: 'md',
     description:
-      'A cosmetic procedure that uses fine crystals and a vacuum to remove dead skin cells and reduce fine lines, minor scars, wrinkles. It can be used on the face, neck, chest, back and hands',
+      'A cosmetic procedure that uses fine crystals and a vacuum to remove dead skin cells and reduce fine lines, minor scars, wrinkles',
     duration: '1h 15min',
     price: '210',
   },
@@ -49,7 +49,7 @@ const procedures = [
     title: 'Nonsurgical Fat Reduction',
     code: 'lipo',
     description:
-      'Nonsurgical or minimally invasive options for fat reduction include technology that uses heat, cooling or an injected medication to reduce fat cells',
+      'Nonsurgical or minimally invasive options for fat reduction include technology that uses heat, cooling or an injected medication',
     duration: '1h 15min',
     price: 'On request',
   },

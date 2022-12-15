@@ -26,6 +26,57 @@ router.post('/services', (req, res, next) => {
     .catch((err) => next(err));
 });
 
+// PROCEDURE ROUTES
+router.get('/edit-procedure/:procedureId', (req, res, next) => {
+  const { procedureId } = req.params;
+
+  Procedure.findById(procedureId)
+    .then((foundProcedure) => res.json(foundProcedure))
+    .catch((err) => next(err));
+});
+
+router.put('/edit-procedure/:procedureId', (req, res, next) => {
+  const { procedureId } = req.params;
+
+  if (req.body.newTitle) {
+    Procedure.findByIdAndUpdate(
+      procedureId,
+      { title: req.body.newTitle },
+      { new: true }
+    ).then((updProc) => res.json(updProc));
+  } else if (req.body.newDescription) {
+    Procedure.findByIdAndUpdate(
+      procedureId,
+      { description: req.body.newDescription },
+      { new: true }
+    ).then((updProc) => res.json(updProc));
+  } else if (req.body.newDuration) {
+    Procedure.findByIdAndUpdate(
+      procedureId,
+      { description: req.body.newDescription },
+      { new: true }
+    ).then((updProc) => res.json(updProc));
+  } else {
+    Procedure.findByIdAndUpdate(
+      procedureId,
+      { price: req.body.newPrice },
+      { new: true }
+    ).then((updProc) => res.json(updProc));
+  }
+});
+
+router.delete('/edit-procedure/:procedureId', (req, res, next) => {
+  const { procedureId } = req.params;
+
+  Procedure.findByIdAndRemove(procedureId)
+    .then(() =>
+      res.json({
+        message: `Procedure with ${procedureId} is removed successfully.`,
+      })
+    )
+    .catch((error) => res.json(error));
+});
+
 // APPOINTMENT ROUTES
 router.get('/create-appointment/:appId', (req, res, next) => {
   const { appId } = req.params;

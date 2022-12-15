@@ -47,44 +47,35 @@ router.get('/user-profile/:profileId', (req, res, next) => {
 router.put('/update-profile/:profileId', (req, res, next) => {
   const { profileId } = req.params;
 
-  const { newUsername, newPassword } = req.body;
+  const { newPassword, newTel } = req.body;
 
   if (!mongoose.Types.ObjectId.isValid(profileId)) {
     res.status(400).json({ message: 'Specified id is not valid' });
     return;
   }
 
-  // check if new username or new email are taken
-  User.findOne({ username: newUsername }).then((foundUser) => {
-    if (foundUser) {
-      // username is taken -> error message
-      res.status(401).json({ message: 'This email is taken' });
-      return;
-    }
-  });
-
-  if (newPassword === '' && newUsername === '') {
+  if (newPassword === '' && newTel === '') {
     User.findByIdAndUpdate(
       profileId,
       {
-        username,
         password,
+        tel,
       },
       { new: true }
     )
       .then((updatedUser) => res.json(updatedUser))
       .catch((error) => res.json(error));
-  } else if (newPassword === '' && newUsername !== '') {
+  } else if (newPassword === '' && newTel !== '') {
     User.findByIdAndUpdate(
       profileId,
       {
-        username: newUsername,
+        tel: newTel,
       },
       { new: true }
     )
       .then((updatedUser) => res.json(updatedUser))
       .catch((error) => res.json(error));
-  } else if (newPassword !== '' && newUsername === '') {
+  } else if (newPassword !== '' && newTel === '') {
     const salt = bcrypt.genSaltSync();
     const hashedNewPassword = bcrypt.hashSync(newPassword, salt);
 
@@ -97,14 +88,14 @@ router.put('/update-profile/:profileId', (req, res, next) => {
     )
       .then((updatedUser) => res.json(updatedUser))
       .catch((error) => res.json(error));
-  } else if (newPassword !== '' && newUsername !== '') {
+  } else if (newPassword !== '' && newTel !== '') {
     const salt = bcrypt.genSaltSync();
     const hashedNewPassword = bcrypt.hashSync(newPassword, salt);
     User.findByIdAndUpdate(
       profileId,
       {
         password: hashedNewPassword,
-        username: newUsername,
+        tel: newTel,
       },
       { new: true }
     )

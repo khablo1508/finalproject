@@ -13,9 +13,9 @@ POST ROUTES
 
 // SIGNUP
 router.post('/signup', (req, res, next) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, tel } = req.body;
   // Check if email or password or name are provided
-  if (username === '' || email === '' || password === '') {
+  if (username === '' || email === '' || password === '' || tel === '') {
     res.status(400).json({ message: 'All fields are necessary!' });
     return;
   }
@@ -47,13 +47,13 @@ router.post('/signup', (req, res, next) => {
       const hashedPassword = bcrypt.hashSync(password, salt);
 
       // Create the new user in the database
-      return User.create({ username, email, password: hashedPassword });
+      return User.create({ username, email, password: hashedPassword, tel });
     })
     .then((createdUser) => {
       // Deconstruct the newly created user object to omit the password
-      const { username, email, _id } = createdUser;
+      const { username, tel, email, _id } = createdUser;
       // Create a new object that doesn't expose the password
-      const user = { username, email, _id };
+      const user = { username, tel, email, _id };
       // Create a JSON Web Token and sign it
       const authToken = jwt.sign(user, process.env.TOKEN_SECRET, {
         algorithm: 'HS256',

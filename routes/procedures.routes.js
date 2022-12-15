@@ -129,7 +129,7 @@ router.post('/create-appointment/:appId', (req, res, next) => {
 
 // REQUESTS ROUTES
 router.put('/admin-profile', (req, res, next) => {
-  const { appStatus, appId, decision, reqId } = req.body;
+  const { appId, decision, reqId } = req.body;
   let promReqUpdate;
   let promAppUpdate;
   if (decision === 'approved') {

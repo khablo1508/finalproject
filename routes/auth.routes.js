@@ -14,6 +14,7 @@ POST ROUTES
 // SIGNUP
 router.post('/signup', (req, res, next) => {
   const { username, email, password, tel } = req.body;
+  console.log(req.body);
   // Check if email or password or name are provided
   if (username === '' || email === '' || password === '' || tel === '') {
     res.status(400).json({ message: 'All fields are necessary!' });

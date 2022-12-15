@@ -6,6 +6,7 @@ const User = require('../models/User.model');
 const Appointment = require('../models/Appointment.model');
 const Request = require('../models/Request.model');
 
+// ADMIN ROUTES
 router.get('/admin-profile', (req, res, next) => {
   Request.find()
     .populate({
@@ -27,6 +28,7 @@ router.get('/admin-profile', (req, res, next) => {
     });
 });
 
+// USER ROUTES
 router.get('/user-profile/:profileId', (req, res, next) => {
   const { profileId } = req.params;
 
@@ -54,18 +56,7 @@ router.put('/update-profile/:profileId', (req, res, next) => {
     return;
   }
 
-  if (newPassword === '' && newTel === '') {
-    User.findByIdAndUpdate(
-      profileId,
-      {
-        password,
-        tel,
-      },
-      { new: true }
-    )
-      .then((updatedUser) => res.json(updatedUser))
-      .catch((error) => res.json(error));
-  } else if (newPassword === '' && newTel !== '') {
+  if (newPassword === '' && newTel !== '') {
     User.findByIdAndUpdate(
       profileId,
       {
@@ -91,6 +82,7 @@ router.put('/update-profile/:profileId', (req, res, next) => {
   } else if (newPassword !== '' && newTel !== '') {
     const salt = bcrypt.genSaltSync();
     const hashedNewPassword = bcrypt.hashSync(newPassword, salt);
+
     User.findByIdAndUpdate(
       profileId,
       {

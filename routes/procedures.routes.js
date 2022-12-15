@@ -71,7 +71,7 @@ router.delete('/edit-procedure/:procedureId', (req, res, next) => {
   Procedure.findByIdAndRemove(procedureId)
     .then(() =>
       res.json({
-        message: `Procedure with ${procedureId} is removed successfully.`,
+        message: `Procedure is successfully removed.`,
       })
     )
     .catch((error) => res.json(error));

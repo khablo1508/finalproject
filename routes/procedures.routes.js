@@ -53,7 +53,7 @@ router.put('/edit-procedure/:procedureId', (req, res, next) => {
   } else if (req.body.newDuration) {
     Procedure.findByIdAndUpdate(
       procedureId,
-      { description: req.body.newDescription },
+      { duration: req.body.newDuration },
       { new: true }
     ).then((updProc) => res.json(updProc));
   } else {

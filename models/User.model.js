@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose');
 
 const userSchema = new Schema(
   {
+    imageUrl: String,
     username: {
       type: String,
       required: false,

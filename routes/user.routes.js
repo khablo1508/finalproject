@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const mongoose = require('mongoose');
+const fileUploader = require('../config/cloudinary.config');
 const User = require('../models/User.model');
 const Appointment = require('../models/Appointment.model');
 const Request = require('../models/Request.model');
@@ -95,5 +96,28 @@ router.put('/update-profile/:profileId', (req, res, next) => {
       .catch((error) => res.json(error));
   }
 });
+
+router.post(
+  '/user-profile/:profileId/upload-avatar',
+  fileUploader.single('imageUrl'),
+  (req, res, next) => {
+    const { profileId } = req.params;
+
+    if (!req.file) {
+      next(new Error('No file uploaded!'));
+      return;
+    }
+
+    User.findByIdAndUpdate(
+      profileId,
+      {
+        imageUrl: req.file.path,
+      },
+      { new: true }
+    ).then((updatedUser) => {
+      res.json(updatedUser);
+    });
+  }
+);
 
 module.exports = router;
